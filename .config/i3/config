@@ -111,18 +111,15 @@ bindsym $mod+Control+N workspace next
 bindsym $mod+Control+P workspace prev
 
 # assign applications to certain workspaces
-for_window [class="firefox"] move to workspace $ws1, focus
+for_window [all] move to workspace $ws10
 for_window [class="Brave-browser"] move to workspace $ws1, focus
-for_window [class="Code"] move to workspace $ws2, focus
-for_window [class="clion"] move to workspace $ws2, focus
+for_window [class="Code|clion"] move to workspace $ws2, focus
 for_window [class="kitty"] move to workspace $ws3, focus
-for_window [class="Discord Updater"] move to workspace $ws4, focus
-for_window [class="discord"] move to workspace $ws4, focus
+for_window [class="Discord Updater|discord"] move to workspace $ws4, focus
 for_window [class="Spotify"] move to workspace $ws5, focus
 for_window [class="Thunar"] move to workspace $ws6, focus
 for_window [class="vlc"] move to workspace $ws7, focus
 for_window [class="Pavucontrol"] move to workspace $ws8
-for_window [class="Skype"] move to workspace $ws10, focus
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
