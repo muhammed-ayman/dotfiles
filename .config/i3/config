@@ -1,88 +1,99 @@
+################################################################################
+##				DEFINITIONS 				      ##
+################################################################################
+
 set $mod Mod4
 
-# Font for window titles
-font pango:Ubuntu Regular 13
+# General Font
+font pango:Ubuntu 12
 
-# XDG autostart
-exec --no-startup-id dex --autostart --environment i3
+################################################################################
+##				KEYBINDINGS 				      ##
+################################################################################
 
-# Applications to fire on startup
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id blueman-applet # Bluetooth Applet
-exec --no-startup-id nm-applet # Network Manager Applet
-exec --no-startup-id picom -b # Picom Compositor
-
-# Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
+# pactl -> adjust volume in PulseAudio
+#set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
-
-# start a terminal
-bindsym $mod+Return exec kitty
-
-# kill focused window
-bindsym $mod+Shift+q kill
-
-# start dmenu (a program launcher)
+# Start Apps
+bindsym $mod+Return exec --no-startup-id kitty
 bindsym $mod+d exec --no-startup-id dmenu_run -b
 
-# change focus
+# Mouse+$mod -> drag floating windows
+floating_modifier $mod
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Change focus (vim keys)
 bindsym $mod+j focus left
 bindsym $mod+k focus down
 bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
-
-# alternatively, you can use the cursor keys:
+# Change focus (cursor keys)
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# move focused window
+# Move focused window (vim keys)
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
-
-# alternatively, you can use the cursor keys:
+# Move focused window (cursor keys)
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
+# Split horizontally
 bindsym $mod+h split h
-
-# split in vertical orientation
+# Split vertically
 bindsym $mod+v split v
 
-# enter fullscreen mode for the focused container
+# Fullscreen Mode (focused container)
 bindsym $mod+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
+# Container layouts
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
+# Toggle tiling & floating
 bindsym $mod+Shift+space floating toggle
 
-# change focus between tiling / floating windows
+# Change focus between tiling & floating windows
 bindsym $mod+space focus mode_toggle
 
-# focus the parent container
+# Focus the parent container
 bindsym $mod+a focus parent
-
-# focus the child container
+# Focus the child container
 #bindsym $mod+d focus child
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
+################################################################################
+##				STARTUP APPS 				      ##
+################################################################################
+
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id blueman-applet # Bluetooth Applet
+exec --no-startup-id nm-applet # Network Manager Applet
+exec --no-startup-id picom -b # Picom Compositor
+
+# XDG autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# Keyboard layout
+exec --no-startup-id "setxkbmap -layout us,ar -option 'grp:alt_shift_toggle'"
+
+################################################################################
+##				WORKSPACES 				      ##
+################################################################################
+
+# Workspaces variables
 set $ws1 "1: "
 set $ws2 "2: "
 set $ws3 "3: "
@@ -94,7 +105,7 @@ set $ws8 "8: "
 set $ws9 "9: "
 set $ws10 "10: "
 
-# switch to workspace
+# Switch to workspace
 bindsym $mod+1 workspace number $ws1
 bindsym $mod+2 workspace number $ws2
 bindsym $mod+3 workspace number $ws3
@@ -106,22 +117,11 @@ bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
 bindsym $mod+0 workspace number $ws10
 
-# switch to next/prev workspace
+# Switch to next/prev workspace
 bindsym $mod+Control+N workspace next
 bindsym $mod+Control+P workspace prev
 
-# assign applications to certain workspaces
-for_window [all] move to workspace $ws10
-for_window [class="Brave-browser"] move to workspace $ws1, focus
-for_window [class="Code|clion"] move to workspace $ws2, focus
-for_window [class="kitty"] move to workspace $ws3, focus
-for_window [class="Discord Updater|discord"] move to workspace $ws4, focus
-for_window [class="Spotify"] move to workspace $ws5, focus
-for_window [class="Thunar"] move to workspace $ws6, focus
-for_window [class="vlc"] move to workspace $ws7, focus
-for_window [class="Pavucontrol"] move to workspace $ws8
-
-# move focused container to workspace
+# Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+2 move container to workspace number $ws2
 bindsym $mod+Shift+3 move container to workspace number $ws3
@@ -133,44 +133,58 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# Assign apps to certain workspaces
+for_window [class="Brave-browser"] move to workspace $ws1, focus
+for_window [class="Code|clion"] move to workspace $ws2, focus
+for_window [class="kitty"] move to workspace $ws3, focus
+for_window [class="Discord Updater|discord"] move to workspace $ws4, focus
+for_window [class="Spotify"] move to workspace $ws5, focus
+for_window [class="Thunar"] move to workspace $ws6, focus
+for_window [class="vlc"] move to workspace $ws7, focus
+for_window [class="Pavucontrol"] move to workspace $ws8
 
-# resize window (you can also use the mouse for that)
+################################################################################
+##				MODES   				      ##
+################################################################################
+
+# Resize Mode
+bindsym $mod+r mode "resize"
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
+	# Vim keys
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
         bindsym semicolon resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
+	# Cursor keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
         bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
+        # Mode controls
         bindsym Return mode "default"
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode "resize"
+# System Status Mode
+bindsym $mod+x mode "$mode_system"
+set $mode_system (l)og_out  (s)uspend  (r)eboot  (p)ower_off
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym p exec --no-startup-id systemctl poweroff, mode "default"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
+    # Exit mode: "Enter" or "Escape"
+    bindsym Escape mode "default"
+}
+
+################################################################################
+##				BAR 				      	      ##
+################################################################################
+
 bar {
-# i3status: #status_command i3status -c /home/oppikn/.config/i3status/i3status.conf
+#	status_command i3status -c /home/oppikn/.config/i3status/i3status.conf
 	font pango:Powerline Symbols, Ubuntu 13
 	status_command /home/oppikn/.config/bumblebee-status/bumblebee-status \
 		-m memory datetime pasink pasource battery\
@@ -182,10 +196,35 @@ bar {
 	tray_output none
 }
 
+################################################################################
+##				WM CONFIG			      	      ##
+################################################################################
 
-
+# Reload the config file
+bindsym $mod+Shift+c reload
+# Restart i3 inplace
+bindsym $mod+Shift+r restart
+# Exit i3
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 # Custom Configurations:
-bindsym $mod+Shift+x exec i3lock
+bindsym $mod+Shift+x exec --no-startup-id i3lock
+
+# i3-gaps
+#smart_gaps on
+smart_borders on
+set $inner_gaps 14
+set $outer_gaps 3
+
+# Window Gaps
+for_window [class="^.*"] border pixel 0
+gaps inner $inner_gaps
+gaps outer $outer_gaps
+smart_borders no_gaps
+border_radius 5
+
+################################################################################
+##				KEYS CONFIG			      	      ##
+################################################################################
 
 ## Audio & Media Buttons
 # Pulse Audio controls
@@ -194,52 +233,13 @@ bindsym ctrl+minus exec --no-startup-id pactl set-sink-volume 0 -5% #decrease so
 bindsym ctrl+Shift+0 exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec brightnessctl s 10%+ # increase screen brightness
-bindsym XF86MonBrightnessDown exec brightnessctl s 10%- # decrease screen brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s 10%+ # increase screen brightness
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 10%- # decrease screen brightness
 
 # Touchpad controls
 bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
 
 # Media player controls
-## Play and Pause with the same key
-bindsym XF86AudioPlay exec playerctl play-pause
-
-##### Play and Pause with different keys #####
-# bindsym XF86AudioPlay exec playerctl play
-# bindsym XF86AudioPause exec playerctl pause
-##############################################
-
+bindsym XF86AudioPlay exec playerctl play-pause # Same key for play/pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
-
-# Open Applications on Startup
-exec_always feh --bg-scale /usr/share/backgrounds/main.jpg
-
-
-### ---- i3-gaps ---- ###
-#smart_gaps on
-smart_borders on
-set $inner_gaps 14
-set $outer_gaps 3
-
-# --- Window Gaps --- #
-for_window [class="^.*"] border pixel 0
-gaps inner $inner_gaps
-gaps outer $outer_gaps
-smart_borders no_gaps
-border_radius 5
-
-### ---- System Status Bindings ---- ###
-set $shutdown systemctl poweroff
-set $reboot systemctl reboot
-set $suspend systemctl suspend
-set $hibernate systemctl hibernate
-
-bindsym $mod+Escape exec --no-startup-id dm-tool switch-to-greeter
-bindsym $mod+Shift+End exec --no-startup-id $hibernate
-bindsym $mod+BackSpace exec --no-startup-id $shutdown
-bindsym $mod+Shift+BackSpace exec --no-startup-id $reboot
-
-
-# Settings to fire on startup
-exec --no-startup-id "setxkbmap -layout us,ar -option 'grp:alt_shift_toggle'"
