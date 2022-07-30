@@ -187,13 +187,17 @@ bar {
 #	status_command i3status -c /home/oppikn/.config/i3status/i3status.conf
 	font pango:Powerline Symbols, Ubuntu 13
 	status_command /home/oppikn/.config/bumblebee-status/bumblebee-status \
-		-m memory datetime pasink pasource battery\
-		-p datetime.format=" %a %e %b %Y, %H:%M:%S " \
-		-t gruvbox-powerline
+		-m memory date time pasink pasource battery\
+		-p date.format=" %a, %b %d %Y" time.format=" %H:%M:%S " \
+		-t iceberg
 
 	position top
 	height 24
 	tray_output none
+	colors {
+      		background #0e0c15
+    	}
+
 }
 
 ################################################################################
