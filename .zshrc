@@ -21,6 +21,11 @@ SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
 
 # Basic auto/tab complete:
+
+# Load Git completion
+zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
+fpath=(~/.zsh $fpath)
+
 autoload -U compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
