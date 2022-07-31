@@ -83,6 +83,9 @@ exec --no-startup-id blueman-applet # Bluetooth Applet
 exec --no-startup-id nm-applet # Network Manager Applet
 exec --no-startup-id picom -b # Picom Compositor
 
+# Wallpaper via Nitrogen
+exec --no-startup-id nitrogen --restore
+
 # XDG autostart
 exec --no-startup-id dex --autostart --environment i3
 
