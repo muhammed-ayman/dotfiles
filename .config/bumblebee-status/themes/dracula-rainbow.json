@@ -3,7 +3,8 @@
     "awesome-fonts-alt"
   ],
   "defaults": {
-    "separator-block-width": 2,
+    "separator" : false,
+    "separator-block-width": 3,
     "warning": {
       "fg": "#f1fa8c"
     },
