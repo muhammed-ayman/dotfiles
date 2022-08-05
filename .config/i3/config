@@ -268,3 +268,6 @@ bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
 bindsym XF86AudioPlay exec playerctl play-pause # Same key for play/pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+
+# Screenshotting
+bindsym Print exec escrotum -s -C
