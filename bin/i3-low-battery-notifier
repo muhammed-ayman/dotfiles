@@ -1,0 +1,113 @@
+#!/bin/bash
+
+################################################################################
+# Script that warns i3wm users when the battery is low                         #
+#                                                                              #
+# Default Notification Threshold:                                              #
+# 1) First Notification: 20%                                                   #
+# 2) Second Notification: 10%                                                  #
+#                                                                              #
+# Options:                                                                     #
+#                                                                              #
+# -h : Display the help info                                                   #
+#                                                                              #
+# -T : The battery value at which the first notification is sent               #
+#                                                                              #
+# -t : The battery value at which the second notification is sent              #
+#                                                                              #
+# -i : The path of the alert icon                                              #
+#                                                                              #
+#                                                                              #
+# By Mohammed Ayman (Oppikn), 2022                                             #
+################################################################################
+
+USAGE="$(basename "$0") [-h] [-T t i] -- Script that warns i3wm users when the battery is low.
+
+where:
+    -h  show help text
+    -T  the battery percentage at which the first warning is sent
+    -t  the battery percentage at which the second warning is sent
+    -i  the path of the alert icon"
+
+THRESHOLD1=20
+THRESHOLD2=10
+WAIT_TIME="10s"
+icon_path=
+WARNINGS_COUNT=0
+
+while getopts ':T:t:i:h' option; do
+	case $option in
+		T) THRESHOLD1=$OPTARG;;
+		t) THRESHOLD2=$OPTARG;;
+		i) icon_path=$OPTARG;;
+		h)
+		   echo "$USAGE"
+		   exit;;
+		\?)
+		   printf "Invalid option: -%s\n" "$OPTARG" >&2
+		   echo "$USAGE" >&2
+		   exit 1;;
+	esac
+done
+
+# Checks wether battery is charging
+isBatteryCharging() {
+	battery_status="$(cat /sys/class/power_supply/BAT0/status)"
+	if [ "$battery_status" == "Charging" ]; then
+	   true
+	else
+  	   false
+	fi
+}
+
+# Returns battery capacity
+getBatteryCapacity() {
+	echo $(cat /sys/class/power_supply/BAT0/capacity)
+}
+
+# Sends low battery alert notification
+notifyLowBattery() {
+	notify-send "Low Battery Alert!" "Your Battery Level is $(getBatteryCapacity)%" --icon="$icon_path"
+}
+
+# Checks whether battery is low
+isBatteryLow() {
+	battery_capacity=$(getBatteryCapacity)
+	if (( $battery_capacity <= $THRESHOLD1 || $battery_capacity <= $THRESHOLD2 )); then
+	    true
+	else
+	   false
+	fi
+}
+
+# Checks whether a notification should be sent
+isNotify() {
+	if (( $battery_capacity <= $THRESHOLD2 && $WARNINGS_COUNT < 2)); then	
+	    WARNINGS_COUNT=1
+	    true
+	elif (( $battery_capacity <= $THRESHOLD1 && $WARNINGS_COUNT == 0)); then
+	    true
+	else
+	    false
+	fi
+}
+
+# Reset warnings counter upon plugging the charger
+resetWarningsCounter() {
+	    if isBatteryCharging; then
+	        WARNINGS_COUNT=0
+	    fi
+}
+
+main() {
+	while true; do
+	    resetWarningsCounter
+	    if isBatteryLow && !(isBatteryCharging) && isNotify; then
+	        notifyLowBattery
+		((WARNINGS_COUNT+=1))
+	    fi
+	    sleep "${WAIT_TIME}"
+	done
+}
+
+main
