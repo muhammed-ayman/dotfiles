@@ -106,5 +106,3 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 # Appending local bin dir
-
-export PATH="$HOME/bin:$PATH"
