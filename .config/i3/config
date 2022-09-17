@@ -5,7 +5,7 @@
 set $mod Mod4
 
 # General Font
-font pango:Ubuntu 12
+font pango:Ubuntu 13
 
 ################################################################################
 ##				KEYBINDINGS 				      ##
@@ -82,6 +82,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id blueman-applet # Bluetooth Applet
 exec --no-startup-id nm-applet # Network Manager Applet
 exec --no-startup-id picom -b # Picom Compositor
+
+# i3wm low battery notifier
+exec --no-startup-id i3-low-battery-notifier -T 20 -t 10 -i ~/config-utils/images/low-battery-icon.png
 
 # Wallpaper via Nitrogen
 exec --no-startup-id nitrogen --restore
@@ -199,7 +202,7 @@ set $rd   #900000
 set $sa   #545454
 
 bar {
-	font pango:Powerline Symbols, Ubuntu 13
+	font pango:Font Awesome, Ubuntu 13
 	tray_output none
 	status_command /home/oppikn/.config/bumblebee-status/bumblebee-status \
 		-m memory date time pasink pasource battery\
