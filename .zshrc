@@ -35,6 +35,24 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
 
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -v '^?' backward-delete-char
+
+# Key bindings
+bindkey '^[[8~' end-of-line # end key;
+bindkey '^[[7~' beginning-of-line # Home key
+bindkey "^[n" down-line-or-history
+bindkey "^[p" up-line-or-history
+bindkey "^N" history-search-forward # or you can bind it to the down key "^[[B"
+bindkey "^P" history-search-backward # or you can bind it to Up key "^[[A"
+# autosuggest keybindings
+bindkey '^X' autosuggest-execute
+bindkey '^E' autosuggest-accept
+
 # Load aliases and shortcuts if existent.
 [ -f "$HOME/.config/shortcutrc" ] && source "$HOME/.config/shortcutrc"
 [ -f "$HOME/.config/aliasrc" ] && source "$HOME/.config/aliasrc"
