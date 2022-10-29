@@ -203,14 +203,14 @@ set $sa   #545454
 
 bar {
 	font pango:Font Awesome, Ubuntu 13
-	tray_output none
 	status_command /home/oppikn/.config/bumblebee-status/bumblebee-status \
 		-m memory date time pasink pasource battery\
 		-p date.format=" %a, %b %d %Y" time.format=" %H:%M:%S " \
 		-t dracula-rainbow
-
+	
+	tray_padding 1
 	position top
-	height 24
+	height 25
 	colors {
 	        background $ia
 	        statusline $be
@@ -223,6 +223,9 @@ bar {
 	}
 
 }
+
+# Polybar
+#exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 ################################################################################
 ##				WM CONFIG			      	      ##
